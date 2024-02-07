@@ -1,0 +1,184 @@
+\ProvidesPackage{triumf-BN}[2018/04/24 v1.0 triumf logo macros]
+\usepackage{triumf-logo}
+
+%commonly used packages
+\usepackage{graphicx,dcolumn}
+\usepackage{amsmath,amssymb,mathtools,amsfonts}
+\usepackage{color,hyperref}
+\usepackage{setspace}
+\usepackage{appendix}
+\usepackage{booktabs}
+\usepackage{dirtytalk}
+\usepackage{tabularx}
+\usepackage{cleveref}
+\usepackage[final]{pdfpages}
+\usepackage{listings}
+\usepackage{xcolor}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=blue,
+    filecolor=blue,      
+    urlcolor=blue
+}
+
+
+
+%%%%%%%%%%% what use to be in dn_report.sty:
+
+%Dec. 2012: commented out the \hbox{ of }\rm \hbox{\ref{totpage}} since
+ %it screws up hyperref.
+\oddsidemargin=.5in
+\topmargin=0in
+\headheight=12pt
+\headsep=25pt
+%
+% text width and height are reset by "make_cover_page" macro
+%
+\textheight=8.5in
+\textwidth=5.5in
+%
+%\footheight=1.0in
+\def\insertplot#1#2#3{\par
+ \hbox{\hskip #3 \vbox to #2{\special{hp: plotfile #1}\vfil}}}
+%
+% redo section command to allow parindent at beginning of section
+%  and subsections
+%
+\renewcommand{\section}{\@startsection {section}{1}{\z@}{3.5ex plus -1ex minus
+ -.2ex}{2.3ex plus .2ex}{\Large\bf}}
+\renewcommand{\subsection}{\@startsection {subsection}{2}{\z@}{3.5ex plus 
+ -1ex minus -.2ex}{1.5ex plus .2ex}{\large\bf}}
+%
+% setup design note heading
+%
+% Definition of 'myheadings' page style.
+%
+\def\ps@myheadings{\let\@mkboth\@gobbletwo
+\def\@oddhead{\hbox{}\sl\rightmark \hfil \hbox{Page} \rm\thepage \sl 
+%\hbox{ of }\rm \hbox{\ref{totpage}} 
+}%
+\def\@oddfoot{}\def\@evenhead{\rm \thepage\hfil\sl\leftmark\hbox {}}%
+\def\@evenfoot{}\def\sectionmark##1{}\def\subsectionmark##1{}}
+%
+\pagestyle{myheadings}
+%
+% macro for writing to aux file
+%
+\def\endreport{\write1{\string\newlabel{totpage}{{\thepage}{\thepage}}}}
+%
+% MACRO FOR THE COVER DESIGN IS INPUT
+%
+% \input{cover_page_macro.tex}
+
+
+%%%%%%%%%%% produces the Title page
+%
+% inputs are;
+% 1 - File number (eg. TRI-DN-88-10)
+% 2 - Author(s)
+% 3 - Title
+% 4 - Abstract
+% 5 - Design note date
+%
+\def\make_cover_page#1#2#3#4#5\par
+{
+    \begin{titlepage}
+        %\pagenumbering set to alpha else hyperref complains. Have to set in the main document
+        \pagenumbering{arabic} 
+        %\pagenumbering{alph}
+        \thispagestyle{empty}
+        \addtolength{\topmargin}{-0.8in}
+        \setlength{\textheight}{\textheight+0.8in}
+        \setlength{\parskip}{3em}
+        \onehalfspacing
+        
+        
+        \begin{minipage}{0.5\textwidth}
+            \begin{flushleft} 
+                \hspace{-1.6em}\logo
+            \end{flushleft}
+            \vspace{4. em}
+        \end{minipage}
+        \begin{minipage}[b]{0.455\textwidth}
+            \begin{flushright} \large
+                \textbf{Beam Physics Note} \\
+                #1\\
+                \setbox3=\hbox{#5}
+                %If date is too short, or empty, today is used.
+                \ifdim\wd3<30pt
+                \today
+                \else
+                #5
+                \fi
+            \end{flushright}
+        \end{minipage}
+        \vspace{0.5in}
+        
+        % Title
+        \begin{center}
+            { \begin{spacing}{1.5}
+                    \LARGE \bf #3
+                \end{spacing}
+            }
+            
+            { \Large #2\\[0.5cm]
+                TRIUMF}
+        \end{center}
+        {\large {\bfseries Abstract:} #4}
+        
+        \vfill
+        \footnotesize
+        % Bottom of the page
+        4004 Wesbrook Mall, Vancouver, B.C. Canada V6T 2A3 · Tel: 604 222-1047 · www.triumf.ca\vspace{-0.8in}
+    \end{titlepage}
+    %
+    % now set things up for the next page
+    %
+    \markright{#1}
+    \newpage
+    \vsize=8.5in
+    \hsize=5.5in
+    %
+    % macro closing bracket
+    %
+}
+
+\makeatother
+
+\colorlet{punct}{red!60!black}
+\definecolor{background}{HTML}{EEEEEE}
+\definecolor{delim}{RGB}{20,105,176}
+\colorlet{numb}{magenta!60!black}
+
+\lstdefinelanguage{json}{
+    basicstyle=\normalfont\ttfamily,
+    numbers=left,
+    numberstyle=\scriptsize,
+    stepnumber=1,
+    numbersep=8pt,
+    showstringspaces=false,
+    breaklines=true,
+    frame=lines,
+    backgroundcolor=\color{background},
+    literate=
+     *{0}{{{\color{numb}0}}}{1}
+      {1}{{{\color{numb}1}}}{1}
+      {2}{{{\color{numb}2}}}{1}
+      {3}{{{\color{numb}3}}}{1}
+      {4}{{{\color{numb}4}}}{1}
+      {5}{{{\color{numb}5}}}{1}
+      {6}{{{\color{numb}6}}}{1}
+      {7}{{{\color{numb}7}}}{1}
+      {8}{{{\color{numb}8}}}{1}
+      {9}{{{\color{numb}9}}}{1}
+      {:}{{{\color{punct}{:}}}}{1}
+      {,}{{{\color{punct}{,}}}}{1}
+      {\{}{{{\color{delim}{\{}}}}{1}
+      {\}}{{{\color{delim}{\}}}}}{1}
+      {[}{{{\color{delim}{[}}}}{1}
+      {]}{{{\color{delim}{]}}}}{1},
+}
+
+
+
